@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         children: [
           Positioned(
-            top: 250,
+            top: 200,
             left: 0,
             right: 0,
             bottom: 0,
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 23,
                       height: 1.2,
                       color: Color.fromARGB(255, 47, 47, 47),
                     ),
