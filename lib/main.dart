@@ -16,10 +16,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      routes: {
+        '/diagnosis':
+            (context) => DiagnosisScreen(), // Menambahkan rute DiagnosisScreen
+      },
       debugShowCheckedModeBanner: false,
       // home: _SplashScreen(),
-      home: DiagnosisScreen(),
+      home: const _SplashScreen(),
     );
   }
 }
