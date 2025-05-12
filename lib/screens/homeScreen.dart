@@ -210,21 +210,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisSpacing: 12,
                           childAspectRatio: 2.5,
                           children: [
+                            const CardMenu(
+                              imagePath: 'images/periksa.png',
+                              title: 'Mulai Diagnosis',
+                              color: Color(0xFF1f4571),
+                              textColor: Colors.white,
+                            ),
                             GestureDetector(
                               onTap: () {
                                 // Menavigasi ke DiagnosisScreen ketika card diklik
                                 Navigator.pushNamed(context, '/diagnosis');
                               },
                               child: const CardMenu(
-                                imagePath: 'images/periksa.png',
-                                title: 'Mulai Diagnosis',
-                                color: Color(0xFF1f4571),
-                                textColor: Colors.white,
+                                imagePath: 'images/gejala.png',
+                                title: 'Kenali Penyakit',
                               ),
-                            ),
-                            const CardMenu(
-                              imagePath: 'images/gejala.png',
-                              title: 'Kenali Gejala',
                             ),
                           ],
                         ),

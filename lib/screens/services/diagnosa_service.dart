@@ -1,39 +1,29 @@
-import '../models/penyakit.dart';
-import '../data/data.dart';
+import 'package:pedulitht/screens/data/data.dart';
 
-/// Hasil keluaran diagnosa:
-/// - [kemungkinan]: daftar ID penyakit yang memiliki minimal 1 gejala cocok
-/// - [akurat]: daftar ID penyakit yang exact match (gejala rule == input)
 class HasilDiagnosa {
   final List<int> kemungkinan;
   final List<int> akurat;
 
-  HasilDiagnosa({
-    required this.kemungkinan,
-    required this.akurat,
-  });
+  HasilDiagnosa({required this.kemungkinan, required this.akurat});
 }
 
-/// Service untuk menjalankan inferensi diagnostik
 class DiagnosaService {
-  /// Melakukan diagnosa berdasarkan [inputGejala] (list ID gejala yang dipilih user)
-  /// Mengembalikan [HasilDiagnosa] berisi kemungkinan & akurat.
-  static HasilDiagnosa diagnosa(List<int> inputGejala) {
-    final inputSet = inputGejala.toSet();
-    final kemungkinan = <int>[];
-    final akurat = <int>[];
+  static HasilDiagnosa diagnosa(List<int> gejalaTerpilih) {
+    final inputSet = gejalaTerpilih.toSet(); // Ubah gejala yang dipilih menjadi Set untuk pencarian lebih cepat.
+    final kemungkinan = <int>[]; // Daftar penyakit yang memiliki minimal 1 gejala cocok.
+    final akurat = <int>[]; // Daftar penyakit yang memiliki kecocokan gejala yang tepat (exact match).
 
+    // Iterasi melalui semua penyakit untuk mencari yang sesuai dengan gejalaTerpilih
     for (var penyakit in semuaPenyakit) {
-      // Hitung berapa gejala rule yang cocok
-      final rule = penyakit.gejalaIds;
-      final cocok = rule.where((g) => inputSet.contains(g)).length;
+      final rule = penyakit.gejalaIds; // Daftar gejala yang terkait dengan penyakit ini.
+      final cocok = rule.where((g) => inputSet.contains(g)).length; // Hitung berapa gejala yang cocok.
 
-      // Jika ada minimal 1 kecocokan, masukkan ke kemungkinan
+      // Jika ada minimal 1 kecocokan gejala, masukkan penyakit ke dalam daftar kemungkinan.
       if (cocok > 0) {
         kemungkinan.add(penyakit.id);
       }
 
-      // Jika input persis sama dengan rule, masukkan ke akurat
+      // Jika gejala input persis cocok dengan gejala penyakit (exact match), masukkan ke dalam daftar akurat.
       if (cocok == rule.length && inputSet.length == rule.length) {
         akurat.add(penyakit.id);
       }

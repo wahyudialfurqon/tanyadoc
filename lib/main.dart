@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:pedulitht/screens/diagnosisScreen.dart';
+import 'package:pedulitht/screens/kenaliPenyakitScreen.dart';
 import 'package:pedulitht/screens/homeScreen.dart';
 import 'package:pedulitht/screens/riwayatScreen.dart';
 
@@ -17,13 +18,17 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        '/diagnosis':
-            (context) => DiagnosisScreen(), // Menambahkan rute DiagnosisScreen
-      },
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white
+      ),
+      // routes: {
+      //   '/diagnosis':
+      //       (context) => KenaliPenyakitScreen(showAppBar: true), // Menambahkan rute DiagnosisScreen
+      // },
       debugShowCheckedModeBanner: false,
       // home: _SplashScreen(),
-      home: const _SplashScreen(),
+      // home: const RiwayatScreen(),
+      home: const DiagnosisScreen(),
     );
   }
 }
