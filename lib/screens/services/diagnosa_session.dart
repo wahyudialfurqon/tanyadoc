@@ -9,6 +9,8 @@ class DiagnosaSession {
 
   bool get isFinished => getNextGejala() == null;
 
+  Set<int> get gejalaYa => _gejalaYa;
+
   int? getNextGejala() {
     final Map<int, int> hitungGejala = {};
 

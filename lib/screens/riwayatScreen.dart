@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class RiwayatScreen extends StatefulWidget {
   const RiwayatScreen({super.key});
@@ -8,65 +10,106 @@ class RiwayatScreen extends StatefulWidget {
 }
 
 class _RiwayatScreenState extends State<RiwayatScreen> {
+  List<Map<String, dynamic>> _riwayat = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _muatRiwayat();
+  }
+
+  Future<void> _muatRiwayat() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getStringList('riwayat') ?? [];
+    setState(() {
+      _riwayat =
+          data.map((item) => jsonDecode(item) as Map<String, dynamic>).toList();
+    });
+  }
+
+  Future<void> _hapusRiwayat() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('riwayat');
+    setState(() {
+      _riwayat.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 60),
-          child: Column(
-            children: [
-              Image.asset('images/iconRiwayat.png', width: 150),
-              const SizedBox(height: 15),
-              Text(
-                'Riwayat Kesehatan Anda',
-                style: TextStyle(fontFamily: 'Poppins', fontSize: 23),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SizedBox(
-                  width: 590,
-                  child: Text(
-                    'Telusuri hasil diagnosis sebelumnya untuk memantau kondisi kesehatan Anda dari waktu ke waktu. Semua data tersimpan dengan rapi dan mudah diakses kapan saja.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 12,
-                      color: Colors.black45,
-                    ),
+      body:
+          _riwayat.isEmpty
+              ? Center(child: Text('Belum ada riwayat diagnosa'))
+              : ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Riwayat Diagnosa',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _hapusRiwayat,
+                        child: const Text(
+                          'Clear All',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'History',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontFamily: 'Poppins',
-                        color: Colors.black54,
+                  ..._riwayat.map((item) {
+                    final nama = item['penyakit'];
+                    final waktu = item['waktu'];
+                    final gejala = List<String>.from(item['gejala']);
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              nama,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              'Gejala: ${gejala.join(', ')}',
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              'Tanggal: ${DateTime.parse(waktu).toLocal().toString().split('.')[0]}',
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Clear All',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontFamily: 'Poppins',
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
+                    );
+                  }).toList(),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

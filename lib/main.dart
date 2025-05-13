@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:pedulitht/screens/diagnosisScreen.dart';
-import 'package:pedulitht/screens/kenaliPenyakitScreen.dart';
+import 'package:pedulitht/screens/detailPenyakitScreen.dart';
 import 'package:pedulitht/screens/homeScreen.dart';
 import 'package:pedulitht/screens/riwayatScreen.dart';
 
@@ -21,14 +21,14 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white
       ),
-      // routes: {
-      //   '/diagnosis':
-      //       (context) => KenaliPenyakitScreen(showAppBar: true), // Menambahkan rute DiagnosisScreen
-      // },
+      routes: {
+        '/diagnosis':
+            (context) => DiagnosisScreen() // Menambahkan rute DiagnosisScreen
+      },
       debugShowCheckedModeBanner: false,
-      // home: _SplashScreen(),
+      home: _SplashScreen(),
       // home: const RiwayatScreen(),
-      home: const DiagnosisScreen(),
+      // home: const HomeScreen(),
     );
   }
 }
@@ -45,7 +45,6 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _pages = const [
     HomeScreen(),
-    DiagnosisScreen(),
     RiwayatScreen(),
   ];
 
@@ -86,10 +85,6 @@ class _MainNavigationState extends State<MainNavigation> {
               const BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.heartCirclePlus),
-                label: 'Diagnosis',
               ),
               const BottomNavigationBarItem(
                 icon: Icon(Icons.history),

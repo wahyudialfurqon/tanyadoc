@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pedulitht/screens/allPenyakitScreen.dart';
+import 'package:pedulitht/screens/data/data.dart';
+import 'package:pedulitht/screens/detailPenyakitScreen.dart';
+import 'package:pedulitht/screens/searchScreen.dart';
 import 'package:pedulitht/screens/widgets/card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isHovered = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,17 +126,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     child: TextField(
+                      readOnly: true, // Biar tap tidak memunculkan keyboard
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const SearchScreen(),
+                          ),
+                        );
+                      },
                       decoration: InputDecoration(
                         hintText: 'Cari gejala atau nama penyakit...',
-                        contentPadding: EdgeInsets.only(
+                        contentPadding: const EdgeInsets.only(
                           left: 16,
                           top: 15,
                           bottom: 15,
                         ),
-                        suffixIcon: Padding(
-                          padding: EdgeInsets.only(
-                            right: 16,
-                          ), // padding kanan untuk ikon
+                        suffixIcon: const Padding(
+                          padding: EdgeInsets.only(right: 16),
                           child: Icon(Icons.search),
                         ),
                         border: InputBorder.none,
@@ -156,12 +168,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Color.fromARGB(221, 42, 42, 42),
                             ),
                           ),
-                          Text(
-                            'Lihat Semua',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 15,
-                              color: Color.fromARGB(221, 42, 42, 42),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const AllPenyakitScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              'Lihat Semua',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 15,
+                                color: Color.fromARGB(221, 42, 42, 42),
+                              ),
                             ),
                           ),
                         ],
@@ -180,54 +202,184 @@ class _HomeScreenState extends State<HomeScreen> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
                           childAspectRatio: 1,
-                          children: const [
+                          children: [
                             CardPenyakit(
                               imageName: 'Faringitis.png',
                               title: 'Faringitis',
+                              onTap: () {
+                                final penyakit = semuaPenyakit.firstWhere(
+                                  (p) =>
+                                      p.nama.toLowerCase() ==
+                                      'faringitis'.toLowerCase(),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            DetailPenyakit(penyakit: penyakit),
+                                  ),
+                                );
+                              },
                             ),
                             CardPenyakit(
                               imageName: 'Sinusitis.png',
                               title: 'Sinusitis',
+                              onTap: () {
+                                final penyakit = semuaPenyakit.firstWhere(
+                                  (p) => p.nama.toLowerCase().contains(
+                                    'sinusitis',
+                                  ),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            DetailPenyakit(penyakit: penyakit),
+                                  ),
+                                );
+                              },
                             ),
                             CardPenyakit(
                               imageName: 'Tonsilitis.png',
                               title: 'Tonsilitis',
+                              onTap: () {
+                                final penyakit = semuaPenyakit.firstWhere(
+                                  (p) => p.nama.toLowerCase() == 'tonsilitis',
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            DetailPenyakit(penyakit: penyakit),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 40),
 
                       // Grid kedua responsif
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 80),
                         child: GridView.count(
-                          crossAxisCount: 2,
+                          crossAxisCount: 1,
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          crossAxisSpacing: 12,
-                          childAspectRatio: 2.5,
+                          childAspectRatio: 5.0,
                           children: [
-                            const CardMenu(
-                              imagePath: 'images/periksa.png',
-                              title: 'Mulai Diagnosis',
-                              color: Color(0xFF1f4571),
-                              textColor: Colors.white,
-                            ),
                             GestureDetector(
                               onTap: () {
                                 // Menavigasi ke DiagnosisScreen ketika card diklik
                                 Navigator.pushNamed(context, '/diagnosis');
                               },
-                              child: const CardMenu(
-                                imagePath: 'images/gejala.png',
-                                title: 'Kenali Penyakit',
+                              child: MouseRegion(
+                                onEnter: (_) {
+                                  // Tambahkan efek hover, misalnya mengubah warna atau bayangan
+                                  setState(() {
+                                    _isHovered = true;
+                                  });
+                                },
+                                onExit: (_) {
+                                  // Kembalikan efek hover saat pointer keluar
+                                  setState(() {
+                                    _isHovered = false;
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: Duration(
+                                    milliseconds: 300,
+                                  ), // Animasi transisi saat hover
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors:
+                                          _isHovered
+                                              ? [
+                                                Color(0xFF1f4571),
+                                                Color(0xFF4e7ab7),
+                                              ] // Warna saat hover
+                                              : [
+                                                Color(0xFF1f4571),
+                                                Color(0xFF4e7ab7),
+                                              ], // Warna default
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color:
+                                          _isHovered
+                                              ? Colors.blueAccent
+                                              : const Color.fromARGB(
+                                                255,
+                                                91,
+                                                150,
+                                                253,
+                                              ), // Warna border saat hover
+                                      width:
+                                          _isHovered
+                                              ? 2
+                                              : 2, // Ketebalan border saat hover
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color:
+                                            _isHovered
+                                                ? Colors.blueAccent.withOpacity(
+                                                  0.8,
+                                                ) // Efek glow saat hover
+                                                : Colors.blueAccent.withOpacity(
+                                                  0.6,
+                                                ),
+                                        spreadRadius: 3,
+                                        blurRadius:
+                                            _isHovered
+                                                ? 15
+                                                : 10, // Blur lebih besar saat hover
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'images/periksa.png', // Image inside the button
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                      SizedBox(width: 20),
+                                      Text(
+                                        'Mulai Diagnosis',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
+                      ),
+                      const SizedBox(height: 18),
+                      Text(
+                        'Cek gejala awal Anda secara cepat dan gratis.',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
