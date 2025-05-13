@@ -9,7 +9,6 @@ class Penyakit {
     required this.gejalaIds,
   });
 
-  /// Untuk mempermudah debug / print
   @override
   String toString() =>
       'Penyakit(id: $id, nama: $nama, gejalaIds: $gejalaIds)';

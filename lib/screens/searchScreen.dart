@@ -24,7 +24,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Filter berdasarkan search dan kategori
+
     final filtered =
         semuaPenyakit.where((p) {
           final namaMatch = p.nama.toLowerCase().contains(
@@ -59,7 +59,7 @@ class _SearchScreenState extends State<SearchScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search Field (read-only handled outside) or editable
+    
             TextField(
               decoration: InputDecoration(
                 hintText: 'Ketik nama penyakit atau gejala...',
@@ -75,7 +75,6 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Category Chips
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -96,7 +95,6 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Hasil
             Expanded(
               child:
                   searchQuery.isEmpty
@@ -170,7 +168,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-// Tambahkan mapping kategori (sama seperti AllPenyakitScreen)
 final Map<int, String> penyakitCategory = {
   0: 'Tenggorokan',
   1: 'Tenggorokan',

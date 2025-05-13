@@ -5,7 +5,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:pedulitht/screens/diagnosisScreen.dart';
 import 'package:pedulitht/screens/detailPenyakitScreen.dart';
 import 'package:pedulitht/screens/homeScreen.dart';
-import 'package:pedulitht/screens/riwayatScreen.dart';
 
 Future<void> main() async {
   await initializeDateFormatting('id_ID', null);
@@ -23,12 +22,12 @@ class MainApp extends StatelessWidget {
       ),
       routes: {
         '/diagnosis':
-            (context) => DiagnosisScreen() // Menambahkan rute DiagnosisScreen
+            (context) => DiagnosisScreen() 
       },
       debugShowCheckedModeBanner: false,
-      home: _SplashScreen(),
+      // home: _SplashScreen(),
       // home: const RiwayatScreen(),
-      // home: const HomeScreen(),
+      home: const DiagnosisScreen(),
     );
   }
 }
@@ -45,7 +44,6 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _pages = const [
     HomeScreen(),
-    RiwayatScreen(),
   ];
 
   @override
@@ -74,24 +72,7 @@ class _MainNavigationState extends State<MainNavigation> {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          child: BottomNavigationBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            selectedItemColor: Color(0xFF1f4571),
-            unselectedItemColor: Color.fromARGB(255, 0, 0, 0),
-            currentIndex: _currentIndex,
-            onTap: (index) => setState(() => _currentIndex = index),
-            items: [
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.history),
-                label: 'Riwayat',
-              ),
-            ],
-          ),
+ 
         ),
       ),
     );

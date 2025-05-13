@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 class CardPenyakit extends StatelessWidget {
   final String imageName;
   final String title;
-  final VoidCallback? onTap; // ✅ tambahkan onTap opsional
+  final VoidCallback? onTap; 
 
   const CardPenyakit({
     super.key,
     required this.imageName,
     required this.title,
-    this.onTap, // ✅ inisialisasi
+    this.onTap, 
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, // ✅ bungkus seluruh Card agar bisa ditekan
+      onTap: onTap, 
       child: Card(
         color: Colors.white,
         elevation: 4,

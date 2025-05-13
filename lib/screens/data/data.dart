@@ -1,7 +1,7 @@
 import 'package:pedulitht/screens/models/gejala.dart';
 import 'package:pedulitht/screens/models/penyakit.dart';
 
-/// Daftar semua gejala (0‑based)
+/// Daftar semua gejala 
 final List<Gejala> semuaGejala = [
   Gejala(id: 0, nama: 'Demam'),
   Gejala(id: 1, nama: 'Sakit kepala'),
@@ -43,7 +43,7 @@ final List<Gejala> semuaGejala = [
   Gejala(id: 37, nama: 'Tubuh tak seimbang'),
 ];
 
-/// Daftar semua penyakit beserta aturan gejala (zero‑based indices)
+/// Daftar semua penyakit beserta aturan gejala 
 final List<Penyakit> semuaPenyakit = [
   Penyakit(id: 0, nama: 'CONTRACT ULCERS',         gejalaIds: [2, 15]),
   Penyakit(id: 1, nama: 'ABAES PARAFARINGEAL',     gejalaIds: [2, 18]),

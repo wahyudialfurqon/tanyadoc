@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          // Pattern hiasan
           Positioned(
             left: 0,
             top: 0,
@@ -48,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Image.asset('images/patternL.png', width: 520),
           ),
 
-          // Konten
           Padding(
             padding: const EdgeInsets.only(top: 60),
             child: Column(
@@ -126,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     child: TextField(
-                      readOnly: true, // Biar tap tidak memunculkan keyboard
+                      readOnly: true, 
                       onTap: () {
                         Navigator.push(
                           context,
@@ -194,7 +192,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: ListView(
                     children: [
-                      // Grid pertama
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: GridView.count(
@@ -263,8 +260,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 40),
-
-                      // Grid kedua responsif
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 80),
                         child: GridView.count(
@@ -275,18 +270,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // Menavigasi ke DiagnosisScreen ketika card diklik
                                 Navigator.pushNamed(context, '/diagnosis');
                               },
                               child: MouseRegion(
                                 onEnter: (_) {
-                                  // Tambahkan efek hover, misalnya mengubah warna atau bayangan
                                   setState(() {
                                     _isHovered = true;
                                   });
                                 },
                                 onExit: (_) {
-                                  // Kembalikan efek hover saat pointer keluar
                                   setState(() {
                                     _isHovered = false;
                                   });
@@ -294,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: AnimatedContainer(
                                   duration: Duration(
                                     milliseconds: 300,
-                                  ), // Animasi transisi saat hover
+                                  ),
                                   padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
@@ -303,11 +295,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ? [
                                                 Color(0xFF1f4571),
                                                 Color(0xFF4e7ab7),
-                                              ] // Warna saat hover
+                                              ] 
                                               : [
                                                 Color(0xFF1f4571),
                                                 Color(0xFF4e7ab7),
-                                              ], // Warna default
+                                              ], 
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                     ),
@@ -321,11 +313,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 91,
                                                 150,
                                                 253,
-                                              ), // Warna border saat hover
+                                              ), 
                                       width:
                                           _isHovered
                                               ? 2
-                                              : 2, // Ketebalan border saat hover
+                                              : 2,
                                     ),
                                     boxShadow: [
                                       BoxShadow(
@@ -333,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             _isHovered
                                                 ? Colors.blueAccent.withOpacity(
                                                   0.8,
-                                                ) // Efek glow saat hover
+                                                ) 
                                                 : Colors.blueAccent.withOpacity(
                                                   0.6,
                                                 ),
@@ -341,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         blurRadius:
                                             _isHovered
                                                 ? 15
-                                                : 10, // Blur lebih besar saat hover
+                                                : 10, 
                                         offset: Offset(0, 3),
                                       ),
                                     ],
@@ -350,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.asset(
-                                        'images/periksa.png', // Image inside the button
+                                        'images/periksa.png', 
                                         height: 40,
                                         width: 40,
                                       ),

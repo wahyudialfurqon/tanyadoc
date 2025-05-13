@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ui'; // Untuk ImageFilter
+import 'dart:ui'; 
 import 'package:flutter/material.dart';
 import 'package:pedulitht/screens/data/data.dart';
 import 'package:pedulitht/screens/models/gejala.dart';
@@ -16,8 +16,7 @@ class DiagnosisScreen extends StatefulWidget {
 class _DiagnosisScreenState extends State<DiagnosisScreen> {
   late DiagnosaSession _session;
   int? _currentGejalaId;
-   bool _started = false;
-
+  bool _started = false;
 
   double _persentase(int penyakitId) {
     final penyakit = semuaPenyakit.firstWhere((p) => p.id == penyakitId);
@@ -44,65 +43,42 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     if (_currentGejalaId != null) {
       _session.answer(_currentGejalaId!, hasSymptom);
       _advanceQuestion();
+
+      if (_session.isFinished) {
+        final hasil = _session.getResult();
+        final List<int> listId =
+            hasil.akurat.isNotEmpty ? hasil.akurat : hasil.kemungkinan;
+
+        if (listId.isNotEmpty) {
+          final id = listId.first;
+          final penyakit = semuaPenyakit.firstWhere((p) => p.id == id);
+          final cocokGejala =
+              penyakit.gejalaIds
+                  .where((gid) => _session.gejalaYa.contains(gid))
+                  .map((gid) => semuaGejala.firstWhere((g) => g.id == gid).nama)
+                  .toList();
+
+        }
+      }
     }
   }
 
-   void _startDiagnosis() {
+  void _startDiagnosis() {
     setState(() {
       _started = true;
       _advanceQuestion();
     });
   }
 
-  void _answer(bool hasSymptom) {
-  if (_currentGejalaId != null) {
-    _session.answer(_currentGejalaId!, hasSymptom);
-    _advanceQuestion();
-
-    // Jika sudah selesai, simpan ke riwayat
-    if (_session.isFinished) {
-      final hasil = _session.getResult();
-      // Pilih list id (akurat dulu, kalau kosong pakai kemungkinan)
-      final List<int> listId = hasil.akurat.isNotEmpty
-          ? hasil.akurat
-          : hasil.kemungkinan;
-
-      if (listId.isNotEmpty) {
-        final id = listId.first;
-        final penyakit = semuaPenyakit.firstWhere((p) => p.id == id);
-        final cocokGejala = penyakit.gejalaIds
-            .where((gid) => _session.gejalaYa.contains(gid))
-            .map((gid) => semuaGejala.firstWhere((g) => g.id == gid).nama)
-            .toList();
-
-        _simpanKeRiwayat(penyakit.nama, cocokGejala);
-      }
-    }
-  }
-}
-
-
-  Future<void> _simpanKeRiwayat(String namaPenyakit, List<String> gejala) async {
-  final prefs = await SharedPreferences.getInstance();
-  final riwayat = prefs.getStringList('riwayat') ?? [];
-  final dataBaru = jsonEncode({
-    'penyakit': namaPenyakit,
-    'gejala': gejala,
-    'waktu': DateTime.now().toIso8601String(),
-  });
-  riwayat.add(dataBaru);
-  await prefs.setStringList('riwayat', riwayat);
-}
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
+      appBar: AppBar(backgroundColor: Colors.white),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: _buildBody(),
       ),
-      body: Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: _buildBody()),
     );
   }
 
@@ -138,7 +114,10 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               onPressed: _startDiagnosis,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue[400],
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -156,7 +135,6 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
         ),
       );
     }
-    // Saat masih proses diagnosis
     if (!_session.isFinished && _currentGejalaId != null) {
       final gejala = semuaGejala.firstWhere(
         (g) => g.id == _currentGejalaId!,
@@ -263,7 +241,6 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
       );
     }
 
-    // Saat sesi diagnosis selesai: tampilkan hasil di bawah gambar
     final hasil = _session.getResult();
     final bool hasAccurate = hasil.akurat.isNotEmpty;
     final bool hasPossible = hasil.kemungkinan.isNotEmpty;
@@ -275,7 +252,6 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
             ? 'Daftar Kemungkinan Penyakit'
             : 'Hasil Tidak Ditemukan';
 
-    // Buat daftar widget hasil: nama, persentase, dan gejala cocok
     final List<Widget> hasilList =
         (hasAccurate
                 ? hasil.akurat
@@ -325,7 +301,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                               fontFamily: 'Poppins',
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Colors.red
+                              color: Colors.red,
                             ),
                           ),
                         ],
@@ -420,6 +396,5 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
         ),
       ],
     );
-    
   }
 }

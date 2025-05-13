@@ -16,9 +16,9 @@ class _AllPenyakitScreenState extends State<AllPenyakitScreen> {
   String selectedCategory = 'Semua';
   String searchQuery = '';
 
-  // Mapping penyakit.id to category
+
   final Map<int, String> penyakitCategory = {
-    0: 'Tenggorokan',  // CONTRACT ULCERS
+    0: 'Tenggorokan',  
     1: 'Tenggorokan',
     2: 'Tenggorokan',
     3: 'Telinga',
@@ -58,12 +58,11 @@ class _AllPenyakitScreenState extends State<AllPenyakitScreen> {
     37: 'Telinga',
     19: 'Hidung',
     20: 'Hidung',
-    // Add more mappings as needed
+    
   };
 
   @override
   Widget build(BuildContext context) {
-    // Filter berdasarkan kategori dan search
     final filtered = semuaPenyakit.where((p) {
       final matchesCategory = selectedCategory == 'Semua' ||
           (penyakitCategory[p.id] ?? 'Semua') == selectedCategory;
@@ -88,7 +87,6 @@ class _AllPenyakitScreenState extends State<AllPenyakitScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Search Field
             TextField(
               decoration: InputDecoration(
                 hintText: 'Cari penyakit...',
@@ -104,7 +102,6 @@ class _AllPenyakitScreenState extends State<AllPenyakitScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Category Chips
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -123,7 +120,6 @@ class _AllPenyakitScreenState extends State<AllPenyakitScreen> {
             ),
             const SizedBox(height: 16),
 
-            // List of filtered diseases
             Expanded(
               child: filtered.isEmpty
                   ? const Center(child: Text('Tidak ada penyakit ditemukan.'))

@@ -10,7 +10,6 @@ class DetailPenyakit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Ambil nama-nama gejala berdasarkan id
     List<Gejala> gejalaPenyakit = semuaGejala
         .where((gejala) => penyakit.gejalaIds.contains(gejala.id))
         .toList();
@@ -25,7 +24,6 @@ class DetailPenyakit extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title Nama Penyakit
             Text(
               penyakit.nama,
               style: const TextStyle(

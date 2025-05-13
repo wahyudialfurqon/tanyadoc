@@ -9,7 +9,6 @@ class Gejala {
     this.dipilih = false,
   });
 
-  /// Untuk mempermudah debug / print
   @override
   String toString() => 'Gejala(id: $id, nama: $nama, dipilih: $dipilih)';
 }
