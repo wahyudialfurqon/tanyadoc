@@ -16,8 +16,12 @@ class DetailPenyakit extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail Penyakit'),
-        backgroundColor: Colors.blue[400],
+        title: const Text('Detail Penyakit',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.bold
+        )),
+        backgroundColor: Color.fromARGB(255, 159, 212, 255),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

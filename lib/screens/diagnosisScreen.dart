@@ -22,7 +22,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     final penyakit = semuaPenyakit.firstWhere((p) => p.id == penyakitId);
     final totalGejala = penyakit.gejalaIds.length;
     final cocok =
-        penyakit.gejalaIds.where((g) => _session.gejalaYa.contains(g)).length;
+        penyakit.gejalaIds.where((g) => _session.gejalaTerjawabYa.contains(g)).length;
     return (cocok / totalGejala) * 100;
   }
 
@@ -41,11 +41,11 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
 
   void _answer(bool hasSymptom) {
     if (_currentGejalaId != null) {
-      _session.answer(_currentGejalaId!, hasSymptom);
+      _session.jawab(_currentGejalaId!, hasSymptom);
       _advanceQuestion();
 
-      if (_session.isFinished) {
-        final hasil = _session.getResult();
+      if (_session.isSelesai) {
+        final hasil = _session.hasilAkhir();
         final List<int> listId =
             hasil.akurat.isNotEmpty ? hasil.akurat : hasil.kemungkinan;
 
@@ -54,7 +54,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
           final penyakit = semuaPenyakit.firstWhere((p) => p.id == id);
           final cocokGejala =
               penyakit.gejalaIds
-                  .where((gid) => _session.gejalaYa.contains(gid))
+                  .where((gid) => _session.gejalaTerjawabYa.contains(gid))
                   .map((gid) => semuaGejala.firstWhere((g) => g.id == gid).nama)
                   .toList();
 
@@ -135,7 +135,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
         ),
       );
     }
-    if (!_session.isFinished && _currentGejalaId != null) {
+    if (!_session.isSelesai && _currentGejalaId != null) {
       final gejala = semuaGejala.firstWhere(
         (g) => g.id == _currentGejalaId!,
         orElse: () => Gejala(id: -1, nama: '--'),
@@ -241,7 +241,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
       );
     }
 
-    final hasil = _session.getResult();
+    final hasil = _session.hasilAkhir();
     final bool hasAccurate = hasil.akurat.isNotEmpty;
     final bool hasPossible = hasil.kemungkinan.isNotEmpty;
 
@@ -263,7 +263,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               final pct = _persentase(id);
               final cocokGejala =
                   penyakit.gejalaIds
-                      .where((gid) => _session.gejalaYa.contains(gid))
+                      .where((gid) => _session.gejalaTerjawabYa.contains(gid))
                       .map(
                         (gid) =>
                             semuaGejala.firstWhere((g) => g.id == gid).nama,
@@ -361,7 +361,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
         ),
         const SizedBox(height: 15),
         SizedBox(
-          height: 300,
+          height: 450,
           child:
               hasilList.isNotEmpty
                   ? ListView(children: hasilList)
@@ -376,7 +376,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                     ),
                   ),
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 50),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[100]),
           onPressed: () {

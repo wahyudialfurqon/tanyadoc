@@ -12,13 +12,18 @@ class AllPenyakitScreen extends StatefulWidget {
 }
 
 class _AllPenyakitScreenState extends State<AllPenyakitScreen> {
-  final List<String> categories = ['Semua', 'Umum', 'Telinga', 'Hidung', 'Tenggorokan'];
+  final List<String> categories = [
+    'Semua',
+    'Umum',
+    'Telinga',
+    'Hidung',
+    'Tenggorokan',
+  ];
   String selectedCategory = 'Semua';
   String searchQuery = '';
 
-
   final Map<int, String> penyakitCategory = {
-    0: 'Tenggorokan',  
+    0: 'Tenggorokan',
     1: 'Tenggorokan',
     2: 'Tenggorokan',
     3: 'Telinga',
@@ -58,23 +63,28 @@ class _AllPenyakitScreenState extends State<AllPenyakitScreen> {
     37: 'Telinga',
     19: 'Hidung',
     20: 'Hidung',
-    
   };
 
   @override
   Widget build(BuildContext context) {
-    final filtered = semuaPenyakit.where((p) {
-      final matchesCategory = selectedCategory == 'Semua' ||
-          (penyakitCategory[p.id] ?? 'Semua') == selectedCategory;
-      final matchesSearch = p.nama.toLowerCase().contains(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    }).toList();
+    final filtered =
+        semuaPenyakit.where((p) {
+          final matchesCategory =
+              selectedCategory == 'Semua' ||
+              (penyakitCategory[p.id] ?? 'Semua') == selectedCategory;
+          final matchesSearch = p.nama.toLowerCase().contains(
+            searchQuery.toLowerCase(),
+          );
+          return matchesCategory && matchesSearch;
+        }).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Daftar Penyakit',
-        style: TextStyle(fontFamily: 'Poppins')),
-        backgroundColor: Colors.blue[400],
+        title: const Text(
+          'Daftar Penyakit',
+          style: TextStyle(fontFamily: 'Poppins'),
+        ),
+        backgroundColor: Color.fromARGB(255, 159, 212, 255),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -105,62 +115,80 @@ class _AllPenyakitScreenState extends State<AllPenyakitScreen> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: categories.map((cat) {
-                  final selected = cat == selectedCategory;
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: ChoiceChip(
-                      label: Text(cat),
-                      selected: selected,
-                      onSelected: (_) => setState(() => selectedCategory = cat),
-                    ),
-                  );
-                }).toList(),
+                children:
+                    categories.map((cat) {
+                      final selected = cat == selectedCategory;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ChoiceChip(
+                          label: Text(cat),
+                          selected: selected,
+                           selectedColor: const Color.fromARGB(255, 159, 212, 255),
+                           backgroundColor: Colors.grey[300],
+                          onSelected:
+                              (_) => setState(() => selectedCategory = cat),
+                        ),
+                      );
+                    }).toList(),
               ),
             ),
             const SizedBox(height: 16),
 
             Expanded(
-              child: filtered.isEmpty
-                  ? const Center(child: Text('Tidak ada penyakit ditemukan.'))
-                  : ListView.builder(
-                      itemCount: filtered.length,
-                      itemBuilder: (context, index) {
-                        final penyakit = filtered[index];
-                        final gejalaList = penyakit.gejalaIds
-                            .map((id) => semuaGejala.firstWhere((g) => g.id == id).nama)
-                            .toList();
-                        final gejalaText = gejalaList.join(', ');
+              child:
+                  filtered.isEmpty
+                      ? const Center(
+                        child: Text('Tidak ada penyakit ditemukan.'),
+                      )
+                      : ListView.builder(
+                        itemCount: filtered.length,
+                        itemBuilder: (context, index) {
+                          final penyakit = filtered[index];
+                          final gejalaList =
+                              penyakit.gejalaIds
+                                  .map(
+                                    (id) =>
+                                        semuaGejala
+                                            .firstWhere((g) => g.id == id)
+                                            .nama,
+                                  )
+                                  .toList();
+                          final gejalaText = gejalaList.join(', ');
 
-                        return Card(
-                          color: Colors.white,
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          elevation: 2,
-                          child: ListTile(
-                            title: Text(
-                              penyakit.nama,
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                          return Card(
+                            color: Colors.white,
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            subtitle: Text(
-                              gejalaText,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => DetailPenyakit(penyakit: penyakit),
+                            elevation: 2,
+                            child: ListTile(
+                              title: Text(
+                                penyakit.nama,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                              ),
+                              subtitle: Text(
+                                gejalaText,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) =>
+                                            DetailPenyakit(penyakit: penyakit),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
             ),
           ],
         ),

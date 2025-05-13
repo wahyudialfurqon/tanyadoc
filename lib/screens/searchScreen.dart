@@ -24,7 +24,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final filtered =
         semuaPenyakit.where((p) {
           final namaMatch = p.nama.toLowerCase().contains(
@@ -53,13 +52,12 @@ class _SearchScreenState extends State<SearchScreen> {
           'Cari Penyakit & Gejala',
           style: TextStyle(fontFamily: 'Poppins'),
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color.fromARGB(255, 159, 212, 255),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-    
             TextField(
               decoration: InputDecoration(
                 hintText: 'Ketik nama penyakit atau gejala...',
@@ -85,6 +83,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         padding: const EdgeInsets.only(right: 8.0),
                         child: ChoiceChip(
                           label: Text(cat),
+                           selectedColor: const Color.fromARGB(255, 159, 212, 255),
+                           backgroundColor: Colors.grey[300],
                           selected: selected,
                           onSelected:
                               (_) => setState(() => selectedCategory = cat),
@@ -129,6 +129,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   .toList();
                           final gejalaText = gejalaList.join(', ');
                           return Card(
+                            color: Colors.white,
                             margin: const EdgeInsets.symmetric(vertical: 6),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),

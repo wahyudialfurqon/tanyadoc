@@ -1,66 +1,85 @@
+// Import file yang berisi data penyakit dan gejala
 import 'package:pedulitht/screens/data/data.dart';
+// Import file yang berisi model hasil diagnosa
 import 'package:pedulitht/screens/services/diagnosa_service.dart';
 
+// Kelas untuk menangani sesi diagnosa
 class DiagnosaSession {
+  // Set untuk menyimpan ID gejala yang dijawab "ya"
   final Set<int> _gejalaYa = {};
+  // Set untuk menyimpan ID gejala yang sudah ditanyakan
   final Set<int> _gejalaDitanyakan = {};
 
+  // List kandidat penyakit yang masih mungkin, diambil dari semua penyakit
   List<int> _kandidatPenyakit = semuaPenyakit.map((p) => p.id).toList();
 
-  bool get isFinished => getNextGejala() == null;
+  // Getter untuk mengecek apakah diagnosa sudah selesai
+  bool get isSelesai => _cariGejalaBerikutnya() == null;
 
-  Set<int> get gejalaYa => _gejalaYa;
+  // Getter untuk mengambil semua gejala yang dijawab "ya"
+  Set<int> get gejalaTerjawabYa => _gejalaYa;
 
-  int? getNextGejala() {
-    final Map<int, int> hitungGejala = {};
+  // Fungsi internal untuk mencari gejala berikutnya yang paling sering muncul
+  int? _cariGejalaBerikutnya() {
+    // Map untuk menghitung jumlah kemunculan tiap gejala dari kandidat penyakit
+    final jumlahKemunculan = <int, int>{};
 
-    for (var id in _kandidatPenyakit) {
-      final penyakit = semuaPenyakit.firstWhere((p) => p.id == id);
-      for (var gid in penyakit.gejalaIds) {
-        if (!_gejalaDitanyakan.contains(gid)) {
-          hitungGejala[gid] = (hitungGejala[gid] ?? 0) + 1;
+    // Iterasi pada semua kandidat penyakit
+    for (var penyakit in semuaPenyakit.where((p) => _kandidatPenyakit.contains(p.id))) {
+      // Hitung gejala yang belum ditanyakan
+      for (var gejala in penyakit.gejalaIds) {
+        if (!_gejalaDitanyakan.contains(gejala)) {
+          jumlahKemunculan[gejala] = (jumlahKemunculan[gejala] ?? 0) + 1;
         }
       }
     }
 
-    if (hitungGejala.isEmpty) return null;
+    // Jika tidak ada gejala tersisa, return null
+    if (jumlahKemunculan.isEmpty) return null;
 
-    final next = hitungGejala.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-
-    return next.first.key;
+    // Kembalikan gejala dengan jumlah kemunculan terbanyak
+    return jumlahKemunculan.entries
+        .reduce((a, b) => a.value >= b.value ? a : b)
+        .key;
   }
 
-  void answer(int gejalaId, bool ya) {
-    _gejalaDitanyakan.add(gejalaId);
-    if (ya) _gejalaYa.add(gejalaId);
+  // Fungsi publik untuk mengambil ID gejala selanjutnya
+  int? getNextGejala() => _cariGejalaBerikutnya();
 
-    // Filter penyakit berdasarkan gejala yang sudah dikumpulkan.
+  // Fungsi untuk mencatat jawaban user terhadap sebuah gejala
+  void jawab(int gejalaId, bool jawabYa) {
+    // Tambahkan gejala ke daftar yang sudah ditanyakan
+    _gejalaDitanyakan.add(gejalaId);
+
+    // Jika jawab "ya", tambahkan ke daftar gejala "ya"
+    if (jawabYa) _gejalaYa.add(gejalaId);
+
+    // Perbarui kandidat penyakit berdasarkan gejala yang dijawab "ya"
     _kandidatPenyakit = semuaPenyakit.where((p) {
-      return _gejalaYa.every((gid) => p.gejalaIds.contains(gid));
+      // Hanya ambil penyakit yang semua gejalanya ada di gejala "ya"
+      return _gejalaYa.every(p.gejalaIds.contains);
     }).map((p) => p.id).toList();
   }
 
-  HasilDiagnosa getResult() {
-    final kemungkinan = <int>[];  // Penyakit yang memiliki minimal satu gejala cocok
-    final akurat = <int>[];  // Penyakit yang memiliki kecocokan persis (exact match)
+  // Fungsi untuk menghitung hasil akhir dari diagnosa
+  HasilDiagnosa hasilAkhir() {
+    final kemungkinan = <int>[]; // Penyakit yang mungkin
+    final akurat = <int>[]; // Penyakit yang cocok secara akurat
 
-    for (var id in _kandidatPenyakit) {
-      final penyakit = semuaPenyakit.firstWhere((p) => p.id == id);
-      final rule = penyakit.gejalaIds;
-      final cocok = rule.where((g) => _gejalaYa.contains(g)).length;
+    for (var penyakit in semuaPenyakit.where((p) => _kandidatPenyakit.contains(p.id))) {
+      // Hitung jumlah gejala yang cocok
+      final cocok = penyakit.gejalaIds.where(_gejalaYa.contains).length;
 
-      // Jika ada minimal 1 kecocokan, masukkan ke kemungkinan.
-      if (cocok > 0) {
-        kemungkinan.add(id);
-      }
+      // Jika ada gejala yang cocok, tambahkan ke kemungkinan
+      if (cocok > 0) kemungkinan.add(penyakit.id);
 
-      // Jika input persis cocok dengan gejala penyakit (exact match), masukkan ke akurat.
-      if (cocok == rule.length && _gejalaYa.length == rule.length) {
-        akurat.add(id);
+      // Jika semua gejala cocok dan tidak lebih, tambahkan ke akurat
+      if (cocok == penyakit.gejalaIds.length && _gejalaYa.length == cocok) {
+        akurat.add(penyakit.id);
       }
     }
 
+    // Kembalikan hasil diagnosa
     return HasilDiagnosa(
       kemungkinan: kemungkinan,
       akurat: akurat,

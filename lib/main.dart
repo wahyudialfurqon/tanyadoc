@@ -27,7 +27,8 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // home: _SplashScreen(),
       // home: const RiwayatScreen(),
-      home: const DiagnosisScreen(),
+      // home: const DiagnosisScreen(),
+      home: HomeScreen()
     );
   }
 }
