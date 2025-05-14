@@ -25,10 +25,7 @@ class MainApp extends StatelessWidget {
             (context) => DiagnosisScreen() 
       },
       debugShowCheckedModeBanner: false,
-      // home: _SplashScreen(),
-      // home: const RiwayatScreen(),
-      // home: const DiagnosisScreen(),
-      home: HomeScreen()
+      home: _SplashScreen(),
     );
   }
 }
